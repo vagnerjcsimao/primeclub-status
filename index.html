@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel de Saude - Prime Club Residence</title>
+<style>
+  :root{
+    --bg:#F3F5F8; --surface:#FFFFFF; --surface-2:#EAEEF3; --border:#DCE2E9;
+    --ink:#131720; --ink-muted:#5C6675; --ink-faint:#8891A0;
+    --accent:#2E6E7E; --accent-soft:#DCEBEE;
+    --ok:#1E8A56; --ok-soft:#DFF3E7; --warn:#B4780A; --warn-soft:#FBEDD6;
+    --crit:#C23B3B; --crit-soft:#FBE1DF;
+    --shadow: 0 1px 2px rgba(20,25,35,.04), 0 8px 24px -12px rgba(20,25,35,.12);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0E1218; --surface:#161B23; --surface-2:#1D232D; --border:#2A313D;
+      --ink:#E8ECF2; --ink-muted:#9AA5B4; --ink-faint:#6B7686;
+      --accent:#5FB4C4; --accent-soft:#17313A;
+      --ok:#4CC488; --ok-soft:#163826; --warn:#E3A83F; --warn-soft:#3A2C11;
+      --crit:#E8695F; --crit-soft:#3A1E1C;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1218; --surface:#161B23; --surface-2:#1D232D; --border:#2A313D;
+    --ink:#E8ECF2; --ink-muted:#9AA5B4; --ink-faint:#6B7686;
+    --accent:#5FB4C4; --accent-soft:#17313A;
+    --ok:#4CC488; --ok-soft:#163826; --warn:#E3A83F; --warn-soft:#3A2C11;
+    --crit:#E8695F; --crit-soft:#3A1E1C; color-scheme: dark;
+  }
+  :root[data-theme="light"]{
+    --bg:#F3F5F8; --surface:#FFFFFF; --surface-2:#EAEEF3; --border:#DCE2E9;
+    --ink:#131720; --ink-muted:#5C6675; --ink-faint:#8891A0;
+    --accent:#2E6E7E; --accent-soft:#DCEBEE;
+    --ok:#1E8A56; --ok-soft:#DFF3E7; --warn:#B4780A; --warn-soft:#FBEDD6;
+    --crit:#C23B3B; --crit-soft:#FBE1DF; color-scheme: light;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; -webkit-font-smoothing:antialiased; }
+  .mono{ font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace; font-variant-numeric: tabular-nums; }
+  .page{ max-width:1120px; margin:0 auto; padding:2.5rem 1.5rem 4rem; display:flex; flex-direction:column; gap:1.75rem; }
+  header{ display:flex; justify-content:space-between; align-items:flex-end; gap:1.5rem; flex-wrap:wrap; }
+  h1{ font-size:1.75rem; line-height:1.15; margin:.2rem 0 .3rem; font-weight:700; letter-spacing:-.01em; text-wrap:balance; }
+  .subtitle{ color:var(--ink-muted); font-size:.9375rem; max-width:52ch; margin:0; }
+  .header-meta{ text-align:right; color:var(--ink-faint); font-size:.75rem; line-height:1.6; }
+  .banner{ display:flex; align-items:center; gap:.9rem; border:1px solid var(--border); border-radius:10px; padding:.9rem 1.1rem; }
+  .banner.ok{ background:var(--ok-soft); } .banner.warn{ background:var(--warn-soft); } .banner.crit{ background:var(--crit-soft); }
+  .banner .dot{ width:.6rem; height:.6rem; border-radius:50%; flex-shrink:0; }
+  .banner.ok .dot{ background:var(--ok); box-shadow:0 0 0 4px color-mix(in srgb, var(--ok) 18%, transparent); }
+  .banner.warn .dot{ background:var(--warn); box-shadow:0 0 0 4px color-mix(in srgb, var(--warn) 18%, transparent); }
+  .banner.crit .dot{ background:var(--crit); box-shadow:0 0 0 4px color-mix(in srgb, var(--crit) 18%, transparent); }
+  .banner strong{ font-weight:700; } .banner span.detail{ color:var(--ink-muted); font-size:.875rem; }
+  .grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:1rem; }
+  .card{ background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:1.1rem 1.2rem 1.25rem;
+    box-shadow:var(--shadow); display:flex; flex-direction:column; gap:.7rem; }
+  .card-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:.5rem; }
+  .card-id{ display:flex; align-items:center; gap:.55rem; }
+  .card-id svg{ flex-shrink:0; color:var(--ink-muted); }
+  .card-title{ font-size:.9375rem; font-weight:600; } .card-sub{ font-size:.75rem; color:var(--ink-faint); margin-top:.1rem; }
+  .pill{ display:inline-flex; align-items:center; gap:.35rem; font-size:.6875rem; font-weight:700; text-transform:uppercase;
+    letter-spacing:.04em; padding:.25rem .55rem; border-radius:999px; white-space:nowrap; }
+  .pill .dot{ width:.4rem; height:.4rem; border-radius:50%; }
+  .pill.ok{ background:var(--ok-soft); color:var(--ok); } .pill.ok .dot{ background:var(--ok); }
+  .pill.warn{ background:var(--warn-soft); color:var(--warn); } .pill.warn .dot{ background:var(--warn); }
+  .pill.crit{ background:var(--crit-soft); color:var(--crit); } .pill.crit .dot{ background:var(--crit); }
+  .metric-row{ display:flex; align-items:baseline; gap:.4rem; }
+  .metric-value{ font-size:1.7rem; font-weight:600; } .metric-unit{ font-size:.8rem; color:var(--ink-faint); }
+  .sparkline{ width:100%; height:36px; display:block; }
+  .sparkline path.fill{ fill:color-mix(in srgb, var(--accent) 16%, transparent); }
+  .sparkline path.line{ fill:none; stroke:var(--accent); stroke-width:1.6; } .sparkline circle{ fill:var(--accent); }
+  .no-data{ font-size:.75rem; color:var(--ink-faint); font-style:italic; }
+  .card-footer{ font-size:.75rem; color:var(--ink-muted); border-top:1px solid var(--border); padding-top:.6rem; }
+  .history-mini{ display:flex; flex-direction:column; gap:.35rem; }
+  .history-mini-label{ font-size:.6875rem; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.04em; }
+  .ticks{ display:flex; gap:3px; }
+  .tick{ flex:1; height:16px; border-radius:3px; }
+  .tick.ok{ background:var(--ok); opacity:.85; } .tick.warn{ background:var(--warn); } .tick.crit{ background:var(--crit); }
+  section.block{ background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:1.2rem 1.3rem 1.35rem; box-shadow:var(--shadow); }
+  .block-head{ margin-bottom:1rem; } .block-head h2{ font-size:1rem; font-weight:700; margin:0; }
+  table{ width:100%; border-collapse:collapse; font-size:.8125rem; }
+  th{ text-align:left; font-size:.6875rem; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-faint); font-weight:700;
+    padding:0 .6rem .5rem 0; border-bottom:1px solid var(--border); }
+  td{ padding:.55rem .6rem .55rem 0; border-bottom:1px solid var(--border); vertical-align:top; }
+  tr:last-child td{ border-bottom:none; } td.time{ color:var(--ink-faint); white-space:nowrap; } td.resource{ font-weight:600; white-space:nowrap; }
+  .table-wrap{ overflow-x:auto; }
+  footer{ color:var(--ink-faint); font-size:.75rem; line-height:1.7; padding-top:.5rem; border-top:1px solid var(--border); }
+  @media (max-width:640px){ .header-meta{ text-align:left; } header{ flex-direction:column; align-items:flex-start; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div>
+      <h1>Painel de Saude - Prime Club Residence</h1>
+      <p class="subtitle">Frontend, backend, banco de dados e storage, cada um em um provedor diferente, verificados automaticamente por um workflow do GitHub Actions.</p>
+    </div>
+    <div class="header-meta">
+      <div>Gerado em: <span class="mono">04/07 18:02</span></div>
+      <div>Atualiza a cada 15 min</div>
+    </div>
+  </header>
+  <div class="banner warn">
+    <span class="dot"></span>
+    <div><strong>Degradado</strong> <span class="detail">&mdash; Backend respondendo lento</span></div>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-top">
+        <div class="card-id">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 8h18"/><circle cx="6" cy="6" r=".6" fill="currentColor" stroke="none"/></svg>
+          <div>
+            <div class="card-title">Frontend</div>
+            <div class="card-sub">Cloudflare Pages</div>
+          </div>
+        </div>
+        <span class="pill ok"><span class="dot"></span>No ar</span>
+      </div>
+      <div class="metric-row"><span class="metric-value mono">98</span><span class="metric-unit">ms de resposta</span></div>
+      <svg class="sparkline" viewBox="0 0 240 36" preserveAspectRatio="none"><path class="fill" d="M0.0,4.0 L240.0,32.0 L240.0,36 L0,36 Z"/><path class="line" d="M0.0,4.0 L240.0,32.0"/><circle cx="240.0" cy="32.0" r="2.4"/></svg>
+      <div class="card-footer">
+        <span class="detail">HTTP 200</span>
+      </div>
+      <div class="history-mini">
+        <span class="history-mini-label">ultimas verificacoes</span>
+        <div class="ticks"><div class="tick ok"></div><div class="tick ok"></div></div>
+      </div>
+    </div> 
+    <div class="card">
+      <div class="card-top">
+        <div class="card-id">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="3" width="16" height="6" rx="1.4"/><rect x="4" y="11" width="16" height="6" rx="1.4"/><circle cx="7.5" cy="6" r=".6" fill="currentColor" stroke="none"/><circle cx="7.5" cy="14" r=".6" fill="currentColor" stroke="none"/><path d="M8 20h8"/></svg>
+          <div>
+            <div class="card-title">Backend</div>
+            <div class="card-sub">Render · /api/health</div>
+          </div>
+        </div>
+        <span class="pill warn"><span class="dot"></span>Lento</span>
+      </div>
+      <div class="metric-row"><span class="metric-value mono">32227</span><span class="metric-unit">ms de resposta</span></div>
+      <svg class="sparkline" viewBox="0 0 240 36" preserveAspectRatio="none"><path class="fill" d="M0.0,4.0 L240.0,32.0 L240.0,36 L0,36 Z"/><path class="line" d="M0.0,4.0 L240.0,32.0"/><circle cx="240.0" cy="32.0" r="2.4"/></svg>
+      <div class="card-footer">
+        <span class="detail">HTTP 200 — possivel cold start (free tier ocioso)</span>
+      </div>
+      <div class="history-mini">
+        <span class="history-mini-label">ultimas verificacoes</span>
+        <div class="ticks"><div class="tick warn"></div><div class="tick warn"></div></div>
+      </div>
+    </div> 
+    <div class="card">
+      <div class="card-top">
+        <div class="card-id">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="12" cy="5.5" rx="8" ry="2.5"/><path d="M4 5.5v6c0 1.4 3.6 2.5 8 2.5s8-1.1 8-2.5v-6"/><path d="M4 11.5v6c0 1.4 3.6 2.5 8 2.5s8-1.1 8-2.5v-6"/></svg>
+          <div>
+            <div class="card-title">Banco de dados</div>
+            <div class="card-sub">Supabase Postgres · Session Pooler</div>
+          </div>
+        </div>
+        <span class="pill ok"><span class="dot"></span>No ar</span>
+      </div>
+      <div class="metric-row"><span class="metric-value mono">215</span><span class="metric-unit">ms de resposta</span></div>
+      <svg class="sparkline" viewBox="0 0 240 36" preserveAspectRatio="none"><path class="fill" d="M0.0,4.0 L240.0,32.0 L240.0,36 L0,36 Z"/><path class="line" d="M0.0,4.0 L240.0,32.0"/><circle cx="240.0" cy="32.0" r="2.4"/></svg>
+      <div class="card-footer">
+        <span class="detail">SELECT 1 ok</span>
+      </div>
+      <div class="history-mini">
+        <span class="history-mini-label">ultimas verificacoes</span>
+        <div class="ticks"><div class="tick ok"></div><div class="tick ok"></div></div>
+      </div>
+    </div> 
+    <div class="card">
+      <div class="card-top">
+        <div class="card-id">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 7l2-3h6l2 3"/><rect x="3" y="7" width="18" height="12" rx="1.6"/><path d="M3 7h18"/></svg>
+          <div>
+            <div class="card-title">Storage</div>
+            <div class="card-sub">Supabase Storage · bucket attachments</div>
+          </div>
+        </div>
+        <span class="pill ok"><span class="dot"></span>No ar</span>
+      </div>
+      <div class="metric-row"><span class="metric-value mono">250</span><span class="metric-unit">ms de resposta</span></div>
+      <svg class="sparkline" viewBox="0 0 240 36" preserveAspectRatio="none"><path class="fill" d="M0.0,4.0 L240.0,32.0 L240.0,36 L0,36 Z"/><path class="line" d="M0.0,4.0 L240.0,32.0"/><circle cx="240.0" cy="32.0" r="2.4"/></svg>
+      <div class="card-footer">
+        <span class="detail">HTTP 200</span>
+      </div>
+      <div class="history-mini">
+        <span class="history-mini-label">ultimas verificacoes</span>
+        <div class="ticks"><div class="tick ok"></div><div class="tick ok"></div></div>
+      </div>
+    </div>
+  </div>
+  
+  <section class="block">
+    <div class="block-head"><h2>Ultimas verificacoes</h2></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Quando</th><th>Recurso</th><th>Status</th><th>Detalhe</th></tr></thead>
+        <tbody><tr><td class="time mono">04/07 18:02</td><td class="resource">Storage</td><td><span class="pill ok"><span class="dot"></span>No ar</span></td><td>HTTP 200</td></tr><tr><td class="time mono">04/07 18:02</td><td class="resource">Frontend</td><td><span class="pill ok"><span class="dot"></span>No ar</span></td><td>HTTP 200</td></tr><tr><td class="time mono">04/07 18:02</td><td class="resource">Backend</td><td><span class="pill warn"><span class="dot"></span>Lento</span></td><td>HTTP 200 — possivel cold start (free tier ocioso)</td></tr><tr><td class="time mono">04/07 18:02</td><td class="resource">Banco de dados</td><td><span class="pill ok"><span class="dot"></span>No ar</span></td><td>SELECT 1 ok</td></tr><tr><td class="time mono">04/07 17:18</td><td class="resource">Frontend</td><td><span class="pill ok"><span class="dot"></span>No ar</span></td><td>HTTP 200</td></tr><tr><td class="time mono">04/07 17:18</td><td class="resource">Backend</td><td><span class="pill warn"><span class="dot"></span>Lento</span></td><td>HTTP 200 — possivel cold start (free tier ocioso)</td></tr><tr><td class="time mono">04/07 17:18</td><td class="resource">Banco de dados</td><td><span class="pill ok"><span class="dot"></span>No ar</span></td><td>SELECT 1 ok</td></tr><tr><td class="time mono">04/07 17:18</td><td class="resource">Storage</td><td><span class="pill ok"><span class="dot"></span>No ar</span></td><td>HTTP 200</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+  <footer>
+    Esta pagina e publicada por <span class="mono">.github/workflows/health-check.yml</span> num repositorio dedicado (GitHub Pages) — continua acessivel mesmo se o Cloudflare Pages, o Render ou o Supabase estiverem fora do ar (mas nao se o proprio GitHub cair; nesse caso o aviso chega por e-mail).
+  </footer>
+</div>
+</body>
+</html>
