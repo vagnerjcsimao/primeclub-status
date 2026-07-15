@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-07-15T08:28:35.192398+00:00",
+  "generated_at": "2026-07-15T10:22:50.480151+00:00",
   "resources": {
     "frontend": {
       "status": "ok",
-      "latency_ms": 157,
+      "latency_ms": 185,
       "detail": "HTTP 200"
     },
     "backend": {
@@ -13,12 +13,12 @@
     },
     "database": {
       "status": "ok",
-      "latency_ms": 484,
+      "latency_ms": 551,
       "detail": "SELECT 1 ok"
     },
     "storage": {
       "status": "ok",
-      "latency_ms": 732,
+      "latency_ms": 503,
       "detail": "HTTP 200"
     }
   }
