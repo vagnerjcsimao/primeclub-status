@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-07-21T10:00:32.863374+00:00",
+  "generated_at": "2026-07-21T11:59:27.247569+00:00",
   "resources": {
     "frontend": {
       "status": "ok",
-      "latency_ms": 111,
+      "latency_ms": 109,
       "detail": "HTTP 200"
     },
     "backend": {
       "status": "warn",
-      "latency_ms": 32406,
+      "latency_ms": 32235,
       "detail": "HTTP 200 \u2014 possivel cold start (free tier ocioso)"
     },
     "database": {
       "status": "ok",
-      "latency_ms": 204,
+      "latency_ms": 216,
       "detail": "SELECT 1 ok"
     },
     "storage": {
       "status": "ok",
-      "latency_ms": 310,
+      "latency_ms": 331,
       "detail": "HTTP 200"
     }
   }
