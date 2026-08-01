@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-08-01T22:53:11.566932+00:00",
+  "generated_at": "2026-08-01T23:55:38.946556+00:00",
   "resources": {
     "frontend": {
       "status": "ok",
-      "latency_ms": 117,
+      "latency_ms": 71,
       "detail": "HTTP 200"
     },
     "backend": {
-      "status": "crit",
-      "latency_ms": null,
-      "detail": "HTTPSConnectionPool(host='primeclub-residence-api.onrender.com', port=443): Read timed out. (read timeout=70)"
+      "status": "warn",
+      "latency_ms": 32282,
+      "detail": "HTTP 200 \u2014 possivel cold start (free tier ocioso)"
     },
     "database": {
       "status": "ok",
-      "latency_ms": 220,
+      "latency_ms": 660,
       "detail": "SELECT 1 ok"
     },
     "storage": {
       "status": "ok",
-      "latency_ms": 325,
+      "latency_ms": 368,
       "detail": "HTTP 200"
     }
   }
