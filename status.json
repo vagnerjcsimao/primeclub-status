@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-07-31T22:58:05.055616+00:00",
+  "generated_at": "2026-08-01T00:05:14.962734+00:00",
   "resources": {
     "frontend": {
       "status": "ok",
-      "latency_ms": 84,
+      "latency_ms": 463,
       "detail": "HTTP 200"
     },
     "backend": {
       "status": "warn",
-      "latency_ms": 32417,
+      "latency_ms": 32278,
       "detail": "HTTP 200 \u2014 possivel cold start (free tier ocioso)"
     },
     "database": {
-      "status": "ok",
-      "latency_ms": 161,
-      "detail": "SELECT 1 ok"
+      "status": "crit",
+      "latency_ms": null,
+      "detail": "connection to server at \"aws-1-us-east-2.pooler.supabase.com\" (3.131.201.192), port 5432 failed: timeout expired\nconnection to server at \"aws-1-us-east-2.pooler.supabase.com\" (13.58.13.125), port 5432"
     },
     "storage": {
       "status": "ok",
-      "latency_ms": 343,
+      "latency_ms": 483,
       "detail": "HTTP 200"
     }
   }
